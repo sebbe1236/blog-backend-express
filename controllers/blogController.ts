@@ -41,8 +41,9 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await queryDB(sql);
     const blogs = {} as any;
-    // map through result by row from the DB query and check if a object already contains this ID, if it does not created the object with the properties in blogs array.
-    // ID is primary key here.
+
+    // the result is mapped through and the blog is added to the blog object if it does not exist. the reason for this check if it is not there is that we do not want the blog object to be created as duplicate/multiple times. If it is there the first foreach loop with the ! operator will return false.
+    // this is to avoid multiple blogs of the same blog. If the blog is not there, it will be created. If it is already there it will skip creating the blog object and just push the comments to that blog in the comments[] array.
     result.forEach((row: any) => {
       if (!blogs[row.id]) {
         blogs[row.id] = {
@@ -55,7 +56,8 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
       }
     });
 
-    // maps through the response and adds the comments to the blog object if it has a comment.
+    // maps through the response and adds the comments as a array to store multiple to one blog to the blog object if it has a comment attached to it from the sql query.
+    // the comments[] is added to the blog object, and the comments are added to that array as part of the blogs object sent as a response to the frontend.
     result.forEach((row: any) => {
       blogs[row.id].comments.push({
         comment: row.comment,
