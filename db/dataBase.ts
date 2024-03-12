@@ -10,24 +10,13 @@ const dbConnect = createPool({
   database: process.env.DB,
 });
 
-// function connectToDB() {
-//   dbConnect.getConnection((err, connection) => {
-//     if (err) {
-//       console.log(err);
-//     }
-//     if (connection) {
-//       connection.release();
-//     }
-//     return;
-//   });
-// }
-
 async function queryDB(query: string, values?: any[]): Promise<any> {
   let connection: PoolConnection | null = null;
 
   try {
     connection = await dbConnect.getConnection();
     const [results] = await connection.query(query, values);
+    console.log("this is the result", results);
     return results;
   } catch (error) {
     console.error("Error executing query:", error);

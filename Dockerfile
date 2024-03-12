@@ -1,17 +1,23 @@
-FROM node:10-alpine
+# Fetching the minified node image on apline linux
+FROM node:slim
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+# Declaring env
+ENV NODE_ENV development
 
-WORKDIR /home/node/app
+# Setting up the work directory
+WORKDIR ./usr/src/app
 
 COPY package*.json ./
-
-USER node
-
+# Installing dependencies
 RUN npm install
 
-COPY --chown=node:node . .
+# Copying all the files in our project
+COPY . .
 
-EXPOSE 8080
 
-CMD [ "node", "app.js" ]
+
+# Starting our application
+CMD [ "node", "index.ts" ]
+
+# Exposing server port
+EXPOSE 5000

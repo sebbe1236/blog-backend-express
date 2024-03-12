@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 
-async function jwtManager(id: number) {
-  const token = jwt.sign({ id: id }, process.env.SKEY, {
+async function jwtManager(user_id: number) {
+  const token = jwt.sign({ id: user_id }, process.env.SKEY, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+
   return token;
 }
 

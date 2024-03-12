@@ -2,20 +2,20 @@ const dotenv = require("dotenv");
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 export interface IGetUserAuthInfoRequest extends Request {
-  user?: string; // or any other type
+  user_id?: any; // or any other type
 }
 dotenv.config();
 
-export function authenticate(req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) {
+function authenticate(req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) {
   // What you sent in frontend header must be the same as what you are getting here. In this case token
   // token is the name passed in frontend.
   // const token = req.headers.Authorization;. Play around with this next weekend.
-  const getAuth = req.headers.token;
+  const authHeader = req.headers.authorization;
 
-  const token = getAuth as string;
-
+  const token = authHeader && authHeader.split(" ")[1];
+  console.log(token, "this is the token");
   // Check if token is undefined
-  if (!token) {
+  if (!authHeader) {
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
@@ -25,15 +25,17 @@ export function authenticate(req: IGetUserAuthInfoRequest, res: Response, next: 
     return;
   }
 
-  jwt.verify(token as string, process.env.SKEY, (err, user) => {
+  jwt.verify(token as string, process.env.SKEY, (err: any, user: any) => {
     if (err) {
       res.status(401).json({ message: "Unauthorized" });
     } else {
-      req.user = user as string; // Explicitly cast user to string
+      req.user_id = user.id as any; // extracts the user id from the payload and assigns it to the request object
+
       console.log(user, "this is the user");
+
       next();
     }
   });
 }
 
-export default authenticate;
+export { authenticate };

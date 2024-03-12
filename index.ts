@@ -1,13 +1,16 @@
-const logger = require("./middleware/handlers/logger");
+import { logger } from "./middleware/handlers/logger";
+
+// Description: This is the main file for the blog application.
 const blogsRouter = require("./routes/blogs");
-const replyRouter = require("./routes/replys");
+const replysRouter = require("./routes/replys");
 const commentsRouter = require("./routes/comments");
 const authRouter = require("./routes/auth");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+
+const { errorHandler } = require("./middleware/handlers/errorHandler");
+const { notFoundError } = require("./middleware/handlers/notFoundError");
 const express = require("express");
-const errorHandler = require("./middleware/handlers/errorHandler");
-const notFoundError = require("./middleware/handlers/notFoundError");
 
 const app = express();
 
@@ -20,7 +23,7 @@ app.use(logger);
 // routes
 app.use("/v1/blogs", blogsRouter);
 
-app.use("/v1/replies", replyRouter);
+app.use("/v1/replies", replysRouter);
 
 app.use("/v1/comments", commentsRouter);
 

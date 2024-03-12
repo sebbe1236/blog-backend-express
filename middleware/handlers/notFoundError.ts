@@ -6,4 +6,4 @@ function notFoundError(req: Request, res: Response, next: NextFunction) {
   next(error);
 }
 
-module.exports = notFoundError;
+export { notFoundError };
