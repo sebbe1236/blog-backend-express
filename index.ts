@@ -1,6 +1,5 @@
-import { logger } from "./middleware/handlers/logger";
-
 // Description: This is the main file for the blog application.
+import { logger } from "./middleware/handlers/logger";
 const blogsRouter = require("./routes/blogs");
 const replysRouter = require("./routes/replys");
 const commentsRouter = require("./routes/comments");

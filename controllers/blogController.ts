@@ -1,25 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { queryDB } from "../db/dataBase";
 
-// async function getBlogs(req: Request, res: Response, next: NextFunction) {
-//   const sql = "SELECT * FROM blogs";
-//   // had to replace by bottom function to sort the comments to that blog.
-//   // it is conditional rendering in the frontend based if user is logged in or not.
-//   try {
-//     console.log("Executing query:", sql);
-//     const result = await queryDB(sql);
-
-//     console.log("Query result:", result);
-//     console.log("Sending response...");
-
-//     res.status(200).json({ success: true, data: result });
-//   } catch (err) {
-//     console.log(err);
-//   } finally {
-//     console.log("get all blog posts call over");
-//   }
-// }
-
 async function getBlog(req: Request, res: Response, next: NextFunction) {
   const sql = "SELECT * FROM blogs WHERE id = ?";
   const { id } = req.params;

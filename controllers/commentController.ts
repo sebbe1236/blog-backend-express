@@ -61,15 +61,15 @@ async function getComment(req: Request, res: Response, next: NextFunction) {
 }
 
 async function postComment(req: any, res: Response, next: NextFunction) {
-  console.log(req.user_id, "user credentials");
-  const { comment, blog_id } = req.body;
+  console.log(req.user_id, req.body, "request body");
+  const { comment, id } = req.body;
   const user_id = req.user_id;
   const sql = "INSERT INTO comments (comment, user_id, blog_id, created_at) VALUES (?,?,?, NOW())";
 
   try {
-    const result = await queryDB(sql, [comment, user_id, blog_id]);
-    console.log(result, "posting a new comment");
+    const result = await queryDB(sql, [comment, user_id, id]);
     res.status(200).json({ success: true, data: result });
+    console.log(result, "posting a new comment");
   } catch (err) {
     res.status(500);
     console.log(err);

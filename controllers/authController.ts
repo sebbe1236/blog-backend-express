@@ -31,7 +31,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
       if (passwordMatch) {
         token = await jwtManager(result[0].id);
       }
-      console.log(result);
+      console.log(result, "this is the result of login");
       // send response
       res.status(200).json({ success: true, data: result, token: token });
     }

@@ -8,6 +8,4 @@ router.get("", getBlogs);
 
 router.get("/blog/:id", getBlog);
 
-//router.get("", getBlogs);
-
 module.exports = router;
