@@ -29,7 +29,9 @@ async function getReply(req: Request, res: Response, next: NextFunction) {
 }
 
 async function postReply(req: any, res: Response, next: NextFunction) {
-  // need to sent id of comment from frontend to backend like with postComment(blog.id)
+  // Reply linked to a comment with comment_id sent as id in the request body from frontend.
+  //The user_id is sent as a token in the request header.
+  // the id of the comment is extracted from the comments loop, and then sent as parameter in the postReply post req in frontend.
 
   console.log("req user id", req.user_id, "req body", req.body, "request body");
   const sql = "INSERT INTO replies(reply, comment_id, created_at) VALUES(?, ?, NOW())";
