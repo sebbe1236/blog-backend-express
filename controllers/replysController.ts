@@ -1,20 +1,24 @@
 import { Request, Response, NextFunction } from "express";
+
 import { queryDB } from "../db/dataBase";
 
 async function getReplies(req: Request, res: Response, next: NextFunction) {
-  const sql = "SELECT * FROM replies";
+  const sql =
+    "SELECT replies.*, comments.comment, users.username FROM replies JOIN comments ON replies.comment_id = comments.id JOIN users ON replies.user_id = users.id WHERE comments.id = ?";
   try {
     const result = await queryDB(sql);
     res.status(200).json({ data: result, message: "success" });
   } catch (err) {
     console.log(err);
     res.status(500).send("Server error");
+  } finally {
+    console.log("get all replies call over");
   }
 }
 
 async function getReply(req: Request, res: Response, next: NextFunction) {
   const sql = "SELECT * FROM replies WHERE id = ?";
-  const { id } = req.params;
+  const id = req.params.id;
   try {
     const result = await queryDB(sql, [id]);
     res.status(200).json({ data: result, message: "success" });
@@ -24,12 +28,16 @@ async function getReply(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function postReply(req: Request, res: Response, next: NextFunction) {
-  const sql = "INSERT INTO replies(reply, user_id, post_id) VALUES(?, ?, ?)";
-  const { reply, user_id, post_id } = req.body as { reply: string; user_id: number; post_id: number };
+async function postReply(req: any, res: Response, next: NextFunction) {
+  // need to sent id of comment from frontend to backend like with postComment(blog.id)
+
+  console.log("req user id", req.user_id, "req body", req.body, "request body");
+  const sql = "INSERT INTO replies(reply, comment_id, created_at) VALUES(?, ?, NOW())";
+  const { reply, comment_id } = req.body as { reply: string; comment_id: number };
+  const user = req.user_id;
   try {
-    const result = await queryDB(sql, [reply, user_id, post_id]);
-    res.status(200).json({ data: result, message: "Reply posted to comment" });
+    const result = await queryDB(sql, [reply, comment_id]);
+    res.status(200).json({ data: result, success: true });
   } catch (err) {
     console.log(err);
     res.status(500).send("Server error");

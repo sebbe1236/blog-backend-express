@@ -7,6 +7,6 @@ router.get("/replies", authenticate, getReplies);
 
 router.get("/reply", authenticate, getReply);
 
-router.post("/respond", authenticate, postReply);
+router.post("", authenticate, postReply);
 
 module.exports = router;

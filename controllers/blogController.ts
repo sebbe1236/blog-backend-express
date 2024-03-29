@@ -16,9 +16,9 @@ async function getBlog(req: Request, res: Response, next: NextFunction) {
 }
 
 async function getBlogs(req: Request, res: Response, next: NextFunction) {
-  //blogs and comments are fetched together from sql, and then conditionally rendered in frontend based on if user is logged in.
+  // fetching blogs with comments included as array in the response. This is linked through partial key to the blogs parent table. Im sending the blog id with the createComment post request to link the comment to the blog when the request is sent from frontend.
   const sql =
-    "SELECT blogs.*, comments.comment, comments.created_at, users.username FROM blogs INNER JOIN comments ON blogs.id = comments.blog_id INNER JOIN users ON comments.user_id = users.id";
+    "SELECT blogs.id, blogs.title, blogs.text, blogs.created_at, comments.id as commentId, comments.comment, comments.created_at as commentCreatedAt, users.username FROM blogs INNER JOIN comments ON blogs.id = comments.blog_id INNER JOIN users ON comments.user_id = users.id";
   try {
     const result = await queryDB(sql);
     const blogs = {} as any;
@@ -37,10 +37,10 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
       }
     });
 
-    // maps through the response and adds the comments as a array to store multiple to one blog to the blog object if it has a comment attached to it from the sql query.
-    // the comments[] is added to the blog object, and the comments are added to that array as part of the blogs object sent as a response to the frontend.
+    // check if the blog exists and push the comments to the blog object in the comments[] array if the blog table has comments linked to it through partial key in mysql.
     result.forEach((row: any) => {
       blogs[row.id].comments.push({
+        id: row.commentId,
         comment: row.comment,
         created_at: row.created_at,
         username: row.username,
