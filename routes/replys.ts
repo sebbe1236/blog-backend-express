@@ -3,7 +3,7 @@ import { getReplies, getReply, postReply } from "../controllers/replysController
 import { authenticate } from "../middleware/auth/auth";
 const router = Router();
 
-router.get("/replies", authenticate, getReplies);
+router.get("", authenticate, getReplies);
 
 router.get("/reply", authenticate, getReply);
 

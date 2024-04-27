@@ -29,16 +29,14 @@ async function getReply(req: Request, res: Response, next: NextFunction) {
 }
 
 async function postReply(req: any, res: Response, next: NextFunction) {
-  // Reply linked to a comment with comment_id sent as id in the request body from frontend.
-  //The user_id is sent as a token in the request header.
-  // the id of the comment is extracted from the comments loop, and then sent as parameter in the postReply post req in frontend.
+  // user_id is added to identify which user replied through the jwt token sent from frontend.
 
   console.log("req user id", req.user_id, "req body", req.body, "request body");
-  const sql = "INSERT INTO replies(reply, comment_id, created_at) VALUES(?, ?, NOW())";
+  const sql = "INSERT INTO replies(reply, comment_id,user_id,  created_at) VALUES(?, ?, ?, NOW())";
   const { reply, comment_id } = req.body as { reply: string; comment_id: number };
   const user = req.user_id;
   try {
-    const result = await queryDB(sql, [reply, comment_id]);
+    const result = await queryDB(sql, [reply, comment_id, user]);
     res.status(200).json({ data: result, success: true });
   } catch (err) {
     console.log(err);
