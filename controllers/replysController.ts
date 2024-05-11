@@ -3,10 +3,14 @@ import { Request, Response, NextFunction } from "express";
 import { queryDB } from "../db/dataBase";
 
 async function getReplies(req: Request, res: Response, next: NextFunction) {
+  const sqlparam =
+    "SELECT replies.*, comments.*, users.username FROM comments JOIN replies ON comments.id = replies.comment_id JOIN users ON replies.user_id = users.id WHERE comments.id = ? ORDER BY replies.comment_id ASC";
   const sql =
-    "SELECT replies.*, comments.comment, users.username FROM replies JOIN comments ON replies.comment_id = comments.id JOIN users ON replies.user_id = users.id WHERE comments.id = ?";
+    "SELECT replies.*, comments.*, users.username FROM comments JOIN replies ON comments.id = replies.comment_id JOIN users ON replies.user_id = users.id WHERE comments.id = ? ORDER BY replies.comment_id ASC";
+  const commentId = req.params.id;
+
   try {
-    const result = await queryDB(sql);
+    const result = await queryDB(sql, [commentId]);
     res.status(200).json({ data: result, message: "success" });
   } catch (err) {
     console.log(err);
