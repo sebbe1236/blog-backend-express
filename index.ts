@@ -1,5 +1,7 @@
 // Description: This is the main file for the blog application.
 import { logger } from "./middleware/handlers/logger";
+const dotenv = require("dotenv");
+dotenv.config();
 const blogsRouter = require("./routes/blogs");
 const replysRouter = require("./routes/replys");
 const commentsRouter = require("./routes/comments");
@@ -13,7 +15,7 @@ const express = require("express");
 
 const app = express();
 
-const PORT = 3002;
+const PORT = process.env.NODE_LOCAL_PORT;
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());

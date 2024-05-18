@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const dbConnect = createPool({
-  port: parseInt(process.env.PORT || "3307"),
+  port: process.env.DB_PORT as any,
   host: process.env.DBHOST,
   user: process.env.DBUSERNAME,
   password: process.env.DBPASSWORD,

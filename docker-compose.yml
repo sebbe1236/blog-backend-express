@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: $DBPASSWORD
+      MYSQL_DATABASE: $DB
+    ports:
+      - "${DB_DOCKER_PORT}:3306"
+    volumes:
+      - ./blogsqldump:/docker-entrypoint-initdb.d
+
+  app:
+    depends_on:
+      - mysqldb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DBHOST: mysqldb
+      DB_PORT: $DB_DOCKER_PORT
+      DB: $DB
+      DBUSER: $DBUSERNAME
+      DBPASSWORD: $DBPASSWORD
+    ports:
+      - 3002:$NODE_LOCAL_PORT
